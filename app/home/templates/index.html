@@ -77,10 +77,11 @@
         <div class="card">
           <div class="card-body">
             <div class="row">
-              <div class="col-lg-3 col-md-3 mt-md-0 mt-4">
+              <div class="col-lg-2 col-md-3 mt-md-0 mt-4">
                 <div class="d-flex">
-                  <div class="wrapper">
-                    <h3 class="mb-0 font-weight-semibold">0</h3>
+                  <img class="img-sm rounded-circle" src="/static/assets/images/thumb_images/car.png" alt="profile image">
+                  <div class="wrapper" style="padding-left: 10px;">
+                    <h3 class="mb-0 font-weight-semibold">{{car['count'].sum()}}</h3>
                     <h5 class="mb-0 font-weight-medium text-primary">Car</h5>
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
@@ -89,22 +90,24 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-3 mt-md-0 mt-4">
+              <div class="col-lg-2 col-md-3 mt-md-0 mt-4">
                 <div class="d-flex">
-                  <div class="wrapper">
-                    <h3 class="mb-0 font-weight-semibold">0</h3>
+                  <img class="img-sm rounded-circle" src="/static/assets/images/thumb_images/motorbike.png" alt="profile image">
+                  <div class="wrapper" style="padding-left: 10px;">
+                    <h3 class="mb-0 font-weight-semibold">{{motorbike['count'].sum()}}</h3>
                     <h5 class="mb-0 font-weight-medium text-primary">Motorbike</h5>
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
-                  <div class="wrapper my-auto ml-auto ml-lg-4">
+                  <div class="wrapper my-auto ml-auto ml-lg-4" >
                     <!--<canvas height="50" width="100" id="stats-line-graph-2"></canvas>-->
                   </div>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-3 mt-md-0 mt-4">
+              <div class="col-lg-2 col-md-3 mt-md-0 mt-4">
                 <div class="d-flex">
-                  <div class="wrapper">
-                    <h3 class="mb-0 font-weight-semibold">0</h3>
+                  <img class="img-sm rounded-circle" src="/static/assets/images/thumb_images/truck.png" alt="profile image">
+                  <div class="wrapper" style="padding-left: 10px;">
+                    <h3 class="mb-0 font-weight-semibold">{{truck['count'].sum()}}</h3>
                     <h5 class="mb-0 font-weight-medium text-primary">Truck</h5>
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
@@ -113,10 +116,11 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-3 mt-md-0 mt-4">
+              <div class="col-lg-2 col-md-3 mt-md-0 mt-4">
                 <div class="d-flex">
-                  <div class="wrapper">
-                    <h3 class="mb-0 font-weight-semibold">0</h3>
+                  <img class="img-sm rounded-circle" src="/static/assets/images/thumb_images/man.png" alt="profile image">
+                  <div class="wrapper" style="padding-left: 10px;">
+                    <h3 class="mb-0 font-weight-semibold">{{person['count'].sum()}}</h3>
                     <h5 class="mb-0 font-weight-medium text-primary">Person</h5>
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
@@ -125,10 +129,11 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-3 mt-md-0 mt-4">
+              <div class="col-lg-2 col-md-3 mt-md-0 mt-4">
                 <div class="d-flex">
-                  <div class="wrapper">
-                    <h3 class="mb-0 font-weight-semibold">0</h3>
+                  <img class="img-sm rounded-circle" src="/static/assets/images/thumb_images/bike.png" alt="profile image">
+                  <div class="wrapper" style="padding-left: 10px;">
+                    <h3 class="mb-0 font-weight-semibold">{{bicycle['count'].sum()}}</h3>
                     <h5 class="mb-0 font-weight-medium text-primary">Bicycle</h5>
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
@@ -137,10 +142,11 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-3 mt-md-0 mt-4">
+              <div class="col-lg-2 col-md-3 mt-md-0 mt-4">
                 <div class="d-flex">
-                  <div class="wrapper">
-                    <h3 class="mb-0 font-weight-semibold">0</h3>
+                  <img class="img-sm rounded-circle" src="/static/assets/images/thumb_images/bus.png" alt="profile image">
+                  <div class="wrapper" style="padding-left: 10px;">
+                    <h3 class="mb-0 font-weight-semibold">{{bus['count'].sum()}}</h3>
                     <h5 class="mb-0 font-weight-medium text-primary">Bus</h5>
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
@@ -677,43 +683,43 @@
             {   
                 label: 'Bicycles',
                 data: {{bicycle["count"].values.tolist()|tojson|safe}},
-                backgroundColor: color1,
-                borderColor: color1,
+                backgroundColor: 'rgba(255, 0, 191)',
+                borderColor: 'rgba(255, 0, 191)',
                 borderWidth: 1
             },
             {
               label: 'Bus',
               data: {{bus["count"].values.tolist()|tojson|safe}},
-              backgroundColor: color2,
-              borderColor: color2,
+              backgroundColor: 'rgba(0, 0, 255)',
+              borderColor: 'rgba(0, 0, 255)',
               borderWidth: 1
             },
             {
               label: 'Car',
               data: {{car["count"].values.tolist()|tojson|safe}},
-              backgroundColor: color3,
-              borderColor: color3,
+              backgroundColor: 'rgba(0, 191, 255)',
+              borderColor: 'rgba(0, 191, 255)',
               borderWidth: 1
             },
             {
               label: 'Motorbike',
               data: {{motorbike["count"].values.tolist()|tojson|safe}},
-              backgroundColor: color4,
-              borderColor: color4,
+              backgroundColor: 'rgba(191, 255, 0)',
+              borderColor: 'rgba(191, 255, 0)',
               borderWidth: 1
             },
             {
               label: 'Person',
               data: {{person["count"].values.tolist()|tojson|safe}},
-              backgroundColor: color5,
-              borderColor: color5,
+              backgroundColor: 'rgba(255, 191, 0)',
+              borderColor: 'rgba(255, 191, 0)',
               borderWidth: 1
             },
             {
               label: 'Truck',
               data: {{truck["count"].values.tolist()|tojson|safe}},
-              backgroundColor: color6,
-              borderColor: color6,
+              backgroundColor: 'rgba(255, 0, 0)',
+              borderColor: 'rgba(255, 0, 0)',
               borderWidth: 1
             },
           ],

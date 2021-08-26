@@ -258,7 +258,7 @@
     -webkit-transition: width 0.25s ease, background 0.25s ease;
     -moz-transition: width 0.25s ease, background 0.25s ease;
     -ms-transition: width 0.25s ease, background 0.25s ease;
-    background: #1c45ef;
+    background: #000636;
     width: 270px;
     height: 63px; }
     .navbar.default-layout .navbar-brand-wrapper .navbar-brand {
@@ -379,7 +379,8 @@
 /* Sidebar */
 .sidebar {
   min-height: calc(100vh - 63px);
-  background: linear-gradient(to top, #5768f3, #1c45ef);
+  background: linear-gradient(to top, #5768f3, #000636
+);
   font-family: "roboto", sans-serif;
   padding: 0;
   width: 270px;
@@ -680,10 +681,10 @@
     .page-header-toolbar .btn-group i,
     .page-header-toolbar .btn i {
       font-size: 1.24rem;
-      color: #2196f3; }
+      color: #000636; }
     .page-header-toolbar .btn-group.dropdown-toggle:after,
     .page-header-toolbar .btn.dropdown-toggle:after {
-      color: #2196f3; }
+      color: #000636; }
 
 .filter-wrapper {
   display: flex;
