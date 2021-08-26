@@ -11,10 +11,11 @@
   <div class="content-wrapper">
     <!-- Page Title Header Starts-->
     <div class="row page-title-header">
+      <!--
       <div class="col-12">
         <div class="page-header">
           <h4 class="page-title">Eco-Census</h4>
-          <!-- <div class="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
+            <div class="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
             <ul class="quick-links">
               <li><a href="#">ICE Market data</a></li>
               <li><a href="#">Own analysis</a></li>
@@ -25,9 +26,10 @@
               <li><a href="#">Analytics</a></li>
               <li><a href="#">Watchlist</a></li>
             </ul>
-          </div> -->
+          </div> 
         </div>
       </div>
+      -->
       <div class="col-md-12">
         <div class="page-header-toolbar">
           <div class="btn-group toolbar-item" role="group" aria-label="Basic example"></div>
@@ -41,6 +43,7 @@
               <input name="filter_button" type="submit" class="btn btn-secondary"><i class="mdi mdi-chevron-right"></i>
             </form> 
           </div>
+          <!--
           <div class="filter-wrapper">
             <div class="dropdown toolbar-item">
               <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownsorting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All Day</button>
@@ -52,6 +55,7 @@
             </div>
             <a href="#" class="advanced-link toolbar-item">Advanced Options</a>
           </div>
+          
           <div class="sort-wrapper">
             <button type="button" class="btn btn-primary toolbar-item">New</button>
             <div class="dropdown ml-lg-auto ml-3 toolbar-item">
@@ -63,6 +67,7 @@
               </div>
             </div>
           </div>
+          -->
         </div>
       </div>
     </div>
@@ -80,7 +85,7 @@
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
                   <div class="wrapper my-auto ml-auto ml-lg-4">
-                    <canvas height="50" width="100" id="stats-line-graph-1"></canvas>
+                    <!--<canvas height="50" width="100" id="stats-line-graph-1"></canvas>-->
                   </div>
                 </div>
               </div>
@@ -92,7 +97,7 @@
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
                   <div class="wrapper my-auto ml-auto ml-lg-4">
-                    <canvas height="50" width="100" id="stats-line-graph-2"></canvas>
+                    <!--<canvas height="50" width="100" id="stats-line-graph-2"></canvas>-->
                   </div>
                 </div>
               </div>
@@ -104,7 +109,7 @@
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
                   <div class="wrapper my-auto ml-auto ml-lg-4">
-                    <canvas height="50" width="100" id="stats-line-graph-3"></canvas>
+                    <!--<canvas height="50" width="100" id="stats-line-graph-3"></canvas>-->
                   </div>
                 </div>
               </div>
@@ -116,7 +121,7 @@
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
                   <div class="wrapper my-auto ml-auto ml-lg-4">
-                    <canvas height="50" width="100" id="stats-line-graph-4"></canvas>
+                    <!--<canvas height="50" width="100" id="stats-line-graph-4"></canvas>-->
                   </div>
                 </div>
               </div>
@@ -128,7 +133,7 @@
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
                   <div class="wrapper my-auto ml-auto ml-lg-4">
-                    <canvas height="50" width="100" id="stats-line-graph-3"></canvas>
+                    <!--<canvas height="50" width="100" id="stats-line-graph-3"></canvas>-->
                   </div>
                 </div>
               </div>
@@ -140,7 +145,7 @@
                     <!--<p class="mb-0 text-muted">+138.97(+0.54%)</p>-->
                   </div>
                   <div class="wrapper my-auto ml-auto ml-lg-4">
-                    <canvas height="50" width="100" id="stats-line-graph-4"></canvas>
+                    <!--<canvas height="50" width="100" id="stats-line-graph-4"></canvas>-->
                   </div>
                 </div>
               </div>
@@ -715,61 +720,6 @@
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                },
-                x: {
-                   
-                },
-            }
-        }
-    });
-    
-  </script>
-  <script>
-    const sens_ctx = document.getElementById('sensorChart').getContext('2d');
-
-    const labels = {{sps['mean']['datetime'].values.tolist()|tojson|safe}};
-    const data = {
-      labels: labels,
-      datasets: [
-        {
-          label: 'mean',
-          data: {{sps['mean']['pm1_0'].values.tolist()|tojson|safe}},
-          borderColor: 'rgba(225, 165, 0, 0.2)',
-          backgroundColor: 'rgba(225, 165, 0, 0.5)',
-        },
-        {
-          label: 'min',
-          data: {{sps['min']['pm1_0'].values.tolist()|tojson|safe}},
-          borderColor: 'rgba(0, 128, 0, 0.2)',
-          backgroundColor: 'rgba(0, 128, 0, 0.5)',
-        },
-        {
-          label: 'max',
-          data: {{sps['max']['pm1_0'].values.tolist()|tojson|safe}},
-          borderColor: 'rgba(255, 99, 132, 0.2)',
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        },
-      ]
-    };
-    
-    const sensChart = new Chart(sens_ctx, {
-        type: 'line',
-        data: data,
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'PM1.0'
-            }
-          },      
           maintainAspectRatio: false,
             scales: {
                 y: {
