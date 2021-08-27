@@ -16,7 +16,13 @@ import requests
 import json
 import modin.pandas as pd
 from app.home.api_utils import api_to_dataframe
+from flask_googlemaps import GoogleMaps, Map
+import ast
+import pytz
+import datetime
 
+devices_data = {} # dict to store data of devices
+devices_location = {} # dict to store coordinates of devices
 
 class API:
 
@@ -28,10 +34,10 @@ class API:
         self.devices = f'http://127.0.0.1:12345/devices'
 
 def pull_data(uuid, datefrom, dateto, freq):
-    api = API(datefrom=datefrom, dateto=dateto, freq=freq)
+    
+    api = API(uuid=uuid, datefrom=datefrom, dateto=dateto, freq=freq)
     response = requests.get(api.mob_address_uuid)
-    mobility_data = response.json()
-    mobility_data = mobility_data['mobility']
+    mobility_data = response.json()['mobility']
     df = pd.read_json(mobility_data)
 
     bicycle = df.loc[df['classification'] == 'bicycle'].drop(columns='classification')
@@ -43,24 +49,35 @@ def pull_data(uuid, datefrom, dateto, freq):
 
     mobility = {'bicycle' : bicycle, 'bus' : bus, 'car' : car, 'motorbike' : motorbike, 'person' : person, 'truck' : truck}
 
-    api = API(df='sps', datefrom=datefrom, dateto=dateto, measure='pm2_5', metric='mean', freq=freq)
+    api = API(uuid=uuid, df='sps', datefrom=datefrom, dateto=dateto, measure='pm2_5', metric='mean', freq=freq)
     response = requests.get(api.sens_address_uuid)
-    pm2_5_mean = response.json()
-    api = API(df='sps', datefrom=datefrom, dateto=dateto, measure='pm2_5', metric='minimum', freq=freq)
+    pm2_5_mean = ast.literal_eval(response.json()['sensors'])
+    pm2_5_mean = list(pm2_5_mean["mean"].values())
+
+    api = API(uuid=uuid, df='sps', datefrom=datefrom, dateto=dateto, measure='pm2_5', metric='minimum', freq=freq)
     response = requests.get(api.sens_address_uuid)
-    pm2_5_min = response.json()
-    api = API(df='sps', datefrom=datefrom, dateto=dateto, measure='pm2_5', metric='maximum', freq=freq)
+    pm2_5_min = ast.literal_eval(response.json()['sensors'])
+    pm2_5_min = list(pm2_5_min["min"].values())
+
+    api = API(uuid=uuid, df='sps', datefrom=datefrom, dateto=dateto, measure='pm2_5', metric='maximum', freq=freq)
     response = requests.get(api.sens_address_uuid)
-    pm2_5_max = response.json()
-    api = API(df='sps', datefrom=datefrom, dateto=dateto, measure='pm10', metric='mean', freq=freq)
+    pm2_5_max = ast.literal_eval(response.json()['sensors'])
+    pm2_5_max = list(pm2_5_max["max"].values())
+
+    api = API(uuid=uuid, df='sps', datefrom=datefrom, dateto=dateto, measure='pm10', metric='mean', freq=freq)
     response = requests.get(api.sens_address_uuid)
-    pm10_mean = response.json()
-    api = API(df='sps', datefrom=datefrom, dateto=dateto, measure='pm10', metric='minimum', freq=freq)
+    pm10_mean = ast.literal_eval(response.json()['sensors'])
+    pm10_mean = list(pm10_mean["mean"].values())
+
+    api = API(uuid=uuid, df='sps', datefrom=datefrom, dateto=dateto, measure='pm10', metric='minimum', freq=freq)
     response = requests.get(api.sens_address_uuid)
-    pm10_min = response.json()
-    api = API(df='sps', datefrom=datefrom, dateto=dateto, measure='pm10', metric='maximum', freq=freq)
+    pm10_min = ast.literal_eval(response.json()['sensors'])
+    pm10_min = list(pm10_min["min"].values())
+
+    api = API(uuid=uuid, df='sps', datefrom=datefrom, dateto=dateto, measure='pm10', metric='maximum', freq=freq)
     response = requests.get(api.sens_address_uuid)
-    pm10_max = response.json()
+    pm10_max = ast.literal_eval(response.json()['sensors'])
+    pm10_max = list(pm10_max["max"].values())
 
     sensors = {'pm2_5_mean' : pm2_5_mean, 'pm2_5_min' : pm2_5_min, 'pm2_5_max' : pm2_5_max, 'pm10_mean' : pm10_mean, 'pm10_min' : pm10_min, 'pm10_max' : pm10_max}
 
@@ -71,63 +88,82 @@ def pull_data(uuid, datefrom, dateto, freq):
 
     return mobility, sensors, devices
 
+def render(mobility, sensors, devices):
+
+    api = API()
+    response = requests.get(api.devices)
+    devices = response.json()
+    df = pd.DataFrame(json.loads(devices['devices'])).reset_index()
+    API.devices = pd.DataFrame(df.uuid.values, index=df.device_name).to_dict()[0]
+    API.devices["All"] = "all"
+    device_locations = API.devices.keys()
+
+    #print(sensors['pm10_min'])
+    raw_date_range = mobility['bicycle']["datetime"].values.tolist()
+    date_range = []
+    for x in raw_date_range:
+        print(x)
+        x = x/1000000000
+        x = datetime.datetime.fromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S')
+        date_range.append(x)
+
+    
+
+        '''
+        utc_datetime = datetime.datetime(x, tzinfo=datetime.timezone.utc)
+        local_timezone = pytz.timezone("GB")
+        local_datetime = utc_datetime.replace(tzinfo=pytz.utc)
+        local_datetime = local_datetime.astimezone(local_timezone)
+        date_range.append(local_datetime)
+        '''
+
+    return render_template('index.html', segment='index', bicycle=mobility['bicycle'], bus=mobility['bus'], car=mobility['car'], motorbike=mobility['motorbike'], 
+    person=mobility['person'], truck=mobility['truck'], device_locations=device_locations, pm2_5_mean=sensors['pm2_5_mean'], pm2_5_min=sensors['pm2_5_min'], 
+    pm2_5_max=sensors['pm2_5_max'], pm10_mean=sensors['pm10_mean'], pm10_min=sensors['pm10_min'], pm10_max=sensors['pm10_max'], date_range=date_range)
+
+
+
 @blueprint.route('/index')
 @login_required
 def index():
 
     mobility, sensors, devices = pull_data(uuid='all', datefrom='24-08-2021', dateto='26-08-2021', freq='H')
 
-    print(sensors['pm10_max'])
-
-    
-    api = API()
-    response = requests.get(api.devices)
-    devices = response.json()
-    
-    df = pd.DataFrame(json.loads(devices['devices'])).reset_index()
-    API.devices = pd.DataFrame(df.uuid.values, index=df.device_name).to_dict()[0]
-    device_locations = API.devices.keys()
-    print(device_locations)
-    
-    return render_template('index.html', segment='index', bicycle=mobility['bicycle'], bus=mobility['bus'], car=mobility['car'], motorbike=mobility['motorbike'], person=mobility['person'], truck=mobility['truck'], device_locations=device_locations, pm2_5_mean=sensors['pm2_5_mean'], pm2_5_min=sensors['pm2_5_min'], pm2_5_max=sensors['pm2_5_max'], pm10_mean=sensors['pm10_mean'], pm10_min=sensors['pm10_min'], pm10_max=sensors['pm10_max'])
+    return render(mobility, sensors, devices)
 
 
 
 @blueprint.route('/filter_by_device', methods=['GET', 'POST'])
 @login_required
 def date_post():
+
+    api = API()
+    response = requests.get(api.devices)
+    devices = response.json()
+    df = pd.DataFrame(json.loads(devices['devices'])).reset_index()
+    API.devices = pd.DataFrame(df.uuid.values, index=df.device_name).to_dict()[0]
+    API.devices["All"] = "all"
+    print(API.devices)
     dates = request.form['dates']
     uuid = request.form['uuid']
     uuid = API.devices[uuid]
     print("Dates + UUID", dates, uuid)
     
     datefrom, dateto = dates.split('-')
+    datefrom = datefrom.strip()
+    dateto = dateto.strip()
+    dt_datefrom = datetime.datetime.strptime(datefrom, '%d/%m/%Y')
+    dt_dateto = datetime.datetime.strptime(dateto, '%d/%m/%Y')
+    print ("_____________", datefrom, dateto)
+    if str(dt_datefrom) == str(dt_dateto):
+        dateto = str(dt_dateto + datetime.timedelta(days=1))
+    print ("_____________", datefrom, dateto)
     datefrom = datefrom.strip().replace("/", "-")
     dateto = dateto.strip().replace("/", "-")
 
-    api = API(datefrom=datefrom, dateto=dateto, uuid=uuid)
-
-    response = requests.get(api.mob_address_uuid)
-    mobility_data = response.json()
-    mobility_data = mobility_data['mobility']
-    mobility_data = api_to_dataframe(mobility_data, 0)
-    bicycle = mobility_data['bicycle']
-    bus = mobility_data['bus']
-    car = mobility_data['car']
-    motorbike = mobility_data['motorbike']
-    person = mobility_data['person']
-    truck = mobility_data['truck']
-
-    response = requests.get(api.sens_address_uuid)
-    sensor_data = response.json()
-    sps = sensor_data['sps']
-    sps = api_to_dataframe(sps, 1)
-    mics = sensor_data['mics']
-    mics = api_to_dataframe(mics, 1)
-    zmod = sensor_data['zmod']
-    zmod = api_to_dataframe(zmod, 1)
+    mobility, sensors, devices = pull_data(uuid=uuid, datefrom=datefrom, dateto=dateto, freq='H')
     
-    return render_template('index.html', segment='index', bicycle=bicycle, bus=bus, car=car, motorbike=motorbike, person=person, truck=truck, sps=sps, mics=mics, zmod=zmod, device_locations=device_locations)
+    return render(mobility, sensors, devices)
 
         
 

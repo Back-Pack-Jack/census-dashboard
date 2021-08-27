@@ -30,6 +30,7 @@
         </div>
       </div>
       -->
+
       <div class="col-md-12">
         <div class="page-header-toolbar">
           <div class="btn-group toolbar-item" role="group" aria-label="Basic example"></div>
@@ -674,7 +675,7 @@
     var color5 = random_rgba()
     var color6 = random_rgba()
     const mob_ctx = document.getElementById('mobilityChart').getContext('2d');
-    var date = {{bicycle["datetime"].values.tolist()|tojson|safe}}
+    var date = {{date_range|tojson|safe}}
     const mobChart = new Chart(mob_ctx, {
         type: 'line',
         data: {
@@ -685,42 +686,66 @@
                 data: {{bicycle["count"].values.tolist()|tojson|safe}},
                 backgroundColor: 'rgba(255, 0, 191)',
                 borderColor: 'rgba(255, 0, 191)',
-                borderWidth: 1
+                borderWidth: 1,
+                yAxisID: 'A'
             },
             {
               label: 'Bus',
               data: {{bus["count"].values.tolist()|tojson|safe}},
               backgroundColor: 'rgba(0, 0, 255)',
               borderColor: 'rgba(0, 0, 255)',
-              borderWidth: 1
+              borderWidth: 1,
+              yAxisID: 'A'
             },
             {
               label: 'Car',
               data: {{car["count"].values.tolist()|tojson|safe}},
               backgroundColor: 'rgba(0, 191, 255)',
               borderColor: 'rgba(0, 191, 255)',
-              borderWidth: 1
+              borderWidth: 1,
+              yAxisID: 'A'
             },
             {
               label: 'Motorbike',
               data: {{motorbike["count"].values.tolist()|tojson|safe}},
               backgroundColor: 'rgba(191, 255, 0)',
               borderColor: 'rgba(191, 255, 0)',
-              borderWidth: 1
+              borderWidth: 1,
+              yAxisID: 'A'
             },
             {
               label: 'Person',
               data: {{person["count"].values.tolist()|tojson|safe}},
               backgroundColor: 'rgba(255, 191, 0)',
               borderColor: 'rgba(255, 191, 0)',
-              borderWidth: 1
+              borderWidth: 1,
+              yAxisID: 'A'
             },
             {
               label: 'Truck',
               data: {{truck["count"].values.tolist()|tojson|safe}},
               backgroundColor: 'rgba(255, 0, 0)',
               borderColor: 'rgba(255, 0, 0)',
-              borderWidth: 1
+              borderWidth: 1,
+              yAxisID: 'A'
+            },
+            {
+              label: 'PM2.5',
+              data: {{pm2_5_mean|tojson|safe}},
+              backgroundColor: 'rgba(0, 153, 0)',
+              borderColor: 'rgba(0, 153, 0)',
+              borderWidth: 1,
+              yAxisID: 'B',
+              fill: true,
+            },
+            {
+              label: 'PM10',
+              data: {{pm10_mean|tojson|safe}},
+              backgroundColor: 'rgba(0, 204, 102)',
+              borderColor: 'rgba(0, 204, 102)',
+              borderWidth: 1,
+              yAxisID: 'B',
+              fill: true,
             },
           ],
         },
@@ -728,10 +753,22 @@
           responsive: true,
           maintainAspectRatio: false,
             scales: {
-                y: {
-                    beginAtZero: true
-                },
-                x: {
+                A:{
+                    id: 'A',
+                    type: 'linear',
+                    beginAtZero: true,
+                    position: 'left',
+                  },
+                B:{
+                  id: 'B',
+                  type: 'linear',
+                  position : 'right',
+                    ticks: {
+                      max: 1,
+                      min: 0
+                    }             
+                  },
+                xAxis: {
                    
                 },
             }

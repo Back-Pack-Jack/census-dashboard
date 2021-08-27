@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 from logging import basicConfig, DEBUG, getLogger, StreamHandler
 from os import path
+from flask_googlemaps import GoogleMaps
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -21,6 +22,7 @@ def register_blueprints(app):
     for module_name in ('base', 'home'):
         module = import_module('app.{}.routes'.format(module_name))
         app.register_blueprint(module.blueprint)
+    GoogleMaps(app)
 
 def configure_database(app):
 
