@@ -94,9 +94,12 @@ def render(mobility, sensors, devices):
     response = requests.get(api.devices)
     devices = response.json()
     df = pd.DataFrame(json.loads(devices['devices'])).reset_index()
-    API.devices = pd.DataFrame(df.uuid.values, index=df.device_name).to_dict()[0]
-    API.devices["All"] = "all"
-    device_locations = API.devices.keys()
+    devices = pd.DataFrame(df.uuid.values, index=df.device_name).to_dict()[0]
+    devices["All"] = "all"
+    device_locations = devices
+    df_lat_long = pd.DataFrame(df[['device_name', 'lat', 'long']])
+    lat_long_list = df_lat_long.values.tolist()
+
 
     #print(sensors['pm10_min'])
     raw_date_range = mobility['bicycle']["datetime"].values.tolist()
@@ -119,7 +122,7 @@ def render(mobility, sensors, devices):
 
     return render_template('index.html', segment='index', bicycle=mobility['bicycle'], bus=mobility['bus'], car=mobility['car'], motorbike=mobility['motorbike'], 
     person=mobility['person'], truck=mobility['truck'], device_locations=device_locations, pm2_5_mean=sensors['pm2_5_mean'], pm2_5_min=sensors['pm2_5_min'], 
-    pm2_5_max=sensors['pm2_5_max'], pm10_mean=sensors['pm10_mean'], pm10_min=sensors['pm10_min'], pm10_max=sensors['pm10_max'], date_range=date_range)
+    pm2_5_max=sensors['pm2_5_max'], pm10_mean=sensors['pm10_mean'], pm10_min=sensors['pm10_min'], pm10_max=sensors['pm10_max'], date_range=date_range, lat_long_list=lat_long_list)
 
 
 
